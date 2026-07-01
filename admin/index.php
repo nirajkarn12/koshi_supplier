@@ -273,7 +273,7 @@
     }
 </style>
 
-<section class="content-header">
+<section class="content-header" style="margin-bottom: 25px;">
     <h1>Dashboard</h1>
 </section>
 
