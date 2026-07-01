@@ -519,7 +519,7 @@ $cust_counts_json = json_encode($cust_counts);
      ============================================================ -->
 <div class="stats-grid">
     <div class="stat-card border-revenue">
-        <div class="stat-number">$<?php echo number_format($total_revenue, 2); ?>
+        <div class="stat-number">Rs.<?php echo number_format($total_revenue, 2); ?>
             <span class="stat-change <?php echo $revenue_change_class; ?>"><?php echo $revenue_change_text; ?></span>
         </div>
         <div class="stat-label">Total Revenue</div>
@@ -541,7 +541,7 @@ $cust_counts_json = json_encode($cust_counts);
     </div>
 
     <div class="stat-card border-aov">
-        <div class="stat-number">$<?php echo number_format($avg_order_value, 2); ?></div>
+        <div class="stat-number">Rs.<?php echo number_format($avg_order_value, 2); ?></div>
         <div class="stat-label">Avg Order Value</div>
         <div class="stat-icon">📊</div>
     </div>
@@ -613,7 +613,7 @@ $cust_counts_json = json_encode($cust_counts);
                     <tr>
                         <td><?php echo htmlspecialchars($cust['cust_name']); ?><br><small><?php echo htmlspecialchars($cust['cust_email']); ?></small></td>
                         <td><?php echo $cust['order_count']; ?></td>
-                        <td>$<?php echo number_format($cust['total_spent'], 2); ?></td>
+                        <td>Rs.<?php echo number_format($cust['total_spent'], 2); ?></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -634,7 +634,7 @@ $cust_counts_json = json_encode($cust_counts);
                     <tr>
                         <td>#<?php echo $order['payment_id']; ?></td>
                         <td><?php echo htmlspecialchars($order['cust_name']); ?></td>
-                        <td>$<?php echo number_format($order['paid_amount'], 2); ?></td>
+                        <td>Rs.<?php echo number_format($order['paid_amount'], 2); ?></td>
                         <td>
                             <?php
                             $status_class = 'pending';
