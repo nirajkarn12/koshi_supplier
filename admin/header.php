@@ -49,7 +49,7 @@ if(!isset($_SESSION['user'])) {
 		<header class="main-header">
 
 			<a href="index.php" class="logo">
-				<span class="logo-lg">koshi Supplier</span>
+				<span class="logo-lg"><strong>KOSHI SUPPLIER</strong></span>
 			</a>
 
 			<nav class="navbar navbar-static-top">
