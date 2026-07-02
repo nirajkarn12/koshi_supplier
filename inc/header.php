@@ -18,6 +18,69 @@ require_once __DIR__ . '/breadcrumbs.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" href="<?php echo ASSET_URL; ?>css/style.css">
+        <style>
+    /* Dropdown menu stays open when interacting inside */
+    .mega-menu {
+        min-width: 260px;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    .category-group {
+        border-bottom: 1px solid #f1f1f1;
+        padding-bottom: 0.3rem;
+    }
+    .category-group:last-child {
+        border-bottom: none;
+    }
+    .category-toggle {
+        cursor: pointer;
+        padding: 0.5rem 0.25rem;
+        border-radius: 6px;
+        transition: background 0.2s;
+    }
+    .category-toggle:hover {
+        background: #f8f9fa;
+    }
+    .category-toggle .caret-icon {
+        transition: transform 0.3s ease;
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+    .category-toggle.active .caret-icon {
+        transform: rotate(180deg);
+    }
+    .subcategory-wrap .dropdown-item {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.9rem;
+        border-radius: 4px;
+    }
+    .subcategory-wrap .dropdown-item:hover {
+        background: #e9ecef;
+    }
+</style>
+    <style>
+    /* Category accordion inside mega menu */
+    .mega-menu .btn-link {
+        font-weight: 600;
+        border-bottom: 1px solid #e9ecef;
+        padding: 0.5rem 0;
+    }
+    .mega-menu .btn-link .collapse-icon {
+        transition: transform 0.2s ease;
+    }
+    .mega-menu .btn-link[aria-expanded="true"] .collapse-icon {
+        transform: rotate(180deg);
+    }
+    .mega-menu .dropdown-item {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.9rem;
+    }
+    /* Optional: make the dropdown scrollable if it becomes too tall */
+    .mega-menu {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+</style>
 </head>
 <body>
 <div class="page-loader" id="pageLoader">
@@ -44,7 +107,7 @@ require_once __DIR__ . '/breadcrumbs.php';
             <img src="<?php echo getProductImage('logo.jpg'); ?>" alt="Brand logo">
             <span>koshi supplier</span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
@@ -52,17 +115,29 @@ require_once __DIR__ . '/breadcrumbs.php';
                 <li class="nav-item"><a class="nav-link" href="<?php echo BASE_URL; ?>"><?php echo t('home'); ?></a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo BASE_URL; ?>products.php"><?php echo t('shop'); ?></a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown"><?php echo t('categories'); ?></a>
-                    <ul class="dropdown-menu mega-menu p-3">
-                        <?php foreach (getTopCategories() as $top) { ?>
-                            <li class="dropdown-header fw-bold text-dark"><?php echo e($top['tcat_name']); ?></li>
-                            <?php foreach (getMidCategories($top['tcat_id']) as $mid) { ?>
-                                <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>category.php?id=<?php echo (int)$mid['mcat_id']; ?>"><?php echo e($mid['mcat_name']); ?></a></li>
-                            <?php } ?>
-                            <li><hr class="dropdown-divider"></li>
+    <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+        <?php echo t('categories'); ?>
+    </a>
+    <ul class="dropdown-menu mega-menu p-3" aria-labelledby="categoryDropdown">
+        <?php foreach (getTopCategories() as $top) { ?>
+            <li class="category-group mb-2">
+                <!-- Toggle header with caret -->
+                <div class="category-toggle d-flex justify-content-between align-items-center" data-target="#collapse-<?php echo $top['tcat_id']; ?>">
+                    <span class="fw-bold text-dark"><?php echo e($top['tcat_name']); ?></span>
+                    <i class="fa fa-chevron-down caret-icon"></i>
+                </div>
+                <!-- Subcategories container (collapsible) -->
+                <div class="subcategory-wrap" id="collapse-<?php echo $top['tcat_id']; ?>" style="display:none;">
+                    <ul class="list-unstyled ms-3 mt-1">
+                        <?php foreach (getMidCategories($top['tcat_id']) as $mid) { ?>
+                            <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>category.php?id=<?php echo (int)$mid['mcat_id']; ?>"><?php echo e($mid['mcat_name']); ?></a></li>
                         <?php } ?>
                     </ul>
-                </li>
+                </div>
+            </li>
+        <?php } ?>
+    </ul>
+</li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo BASE_URL; ?>about.php"><?php echo t('about'); ?></a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo BASE_URL; ?>blog.php"><?php echo t('blog'); ?></a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo BASE_URL; ?>contact.php"><?php echo t('contact'); ?></a></li>
@@ -104,3 +179,39 @@ require_once __DIR__ . '/breadcrumbs.php';
 <main class="pb-5">
     <div class="container py-4">
         <?php echo renderFlash(); ?>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Category toggle click
+    $('.category-toggle').on('click', function(e) {
+        e.stopPropagation(); // Prevents dropdown from closing
+        
+        var target = $(this).data('target');
+        var $subWrap = $(target);
+        var $toggle = $(this);
+        
+        // Slide toggle
+        $subWrap.slideToggle(300, function() {
+            $toggle.toggleClass('active');
+        });
+    });
+    
+    // (Optional) Close other open categories when opening a new one? 
+    // If you want only one open at a time, uncomment below:
+    /*
+    $('.category-toggle').on('click', function(e) {
+        e.stopPropagation();
+        var currentTarget = $(this).data('target');
+        $('.subcategory-wrap').each(function() {
+            if ('#' + this.id !== currentTarget) {
+                $(this).slideUp(200);
+                $('.category-toggle[data-target="#' + this.id + '"]').removeClass('active');
+            }
+        });
+        $(currentTarget).slideToggle(300, function() {
+            $('.category-toggle[data-target="' + currentTarget + '"]').toggleClass('active');
+        });
+    });
+    */
+});
+</script>
