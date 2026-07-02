@@ -38,6 +38,9 @@ $items = $statement->fetchAll(PDO::FETCH_ASSOC);
         <?php for ($copyIndex = 0; $copyIndex < 2; $copyIndex++): ?>
             <div class="col-sm-6">
                 <div class="invoice-card">
+                    <div class="invoice-watermark" aria-hidden="true">
+                        <img src="../assets/images/placeholder.png" alt="">
+                    </div>
                     <div class="invoice-header">
                         <div>
                             <h2>KOSHI SUPPLIER</h2>
@@ -152,6 +155,16 @@ $items = $statement->fetchAll(PDO::FETCH_ASSOC);
     background: #ffffff;
     margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+}
+.invoice-watermark {
+    display: none;
+}
+.invoice-watermark img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 .invoice-header {
     display: flex;
@@ -390,7 +403,20 @@ margin:0!important;
     break-inside:auto!important;
     page-break-inside:auto!important;
     }
-
+  .invoice-watermark {
+        display: block !important;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(70%, 320px);
+        max-width: 70%;
+        opacity: 0.06;
+        z-index: 0;
+        pointer-events: none;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
     /* Hide QR Code */
     .qr-notes-box,
     .qr-code-box,
