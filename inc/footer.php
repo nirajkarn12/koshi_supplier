@@ -1,0 +1,58 @@
+    </div>
+</main>
+<a href="#" class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fa fa-arrow-up"></i></a>
+<a href="https://wa.me/9869224134" class="floating-wa" target="_blank" rel="noreferrer" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+<footer class="site-footer">
+    <div class="container py-5">
+        <div class="row g-4 align-items-start">
+            <div class="col-lg-4">
+                <div class="footer-brand mb-3">
+                    <img src="<?php echo getProductImage('logo.jpg'); ?>" alt="Brand logo">
+                    <span>koshi supplier</span>
+                </div>
+                <p class="text-white-50 mb-0"><?php echo t('crafted_with_care'); ?></p>
+            </div>
+            <div class="col-lg-4">
+                <h5 class="fw-bold mb-3"><?php echo t('quick_links'); ?></h5>
+                <ul class="list-unstyled footer-links">
+                    <li><a href="<?php echo BASE_URL; ?>products.php"><?php echo t('shop'); ?></a></li>
+                    <li><a href="<?php echo BASE_URL; ?>about.php"><?php echo t('about'); ?></a></li>
+                    <li><a href="<?php echo BASE_URL; ?>blog.php"><?php echo t('blog'); ?></a></li>
+                    <li><a href="<?php echo BASE_URL; ?>contact.php"><?php echo t('contact'); ?></a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <h5 class="fw-bold mb-3"><?php echo t('contact'); ?></h5>
+                <p class="text-white-50 mb-2"><i class="fa fa-location-dot me-2"></i><?php echo e(getSiteSetting('contact_address', 'Kathmandu, Nepal')); ?></p>
+                <p class="text-white-50 mb-2"><i class="fa fa-phone me-2"></i><?php echo e(getSiteSetting('contact_phone', '+977 9869224134')); ?></p>
+                <p class="text-white-50 mb-0"><i class="fa fa-envelope me-2"></i><?php echo e(getSiteSetting('contact_email', 'contact@resinnepal.com.np')); ?></p>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center small gap-2">
+            <span>
+                <?php
+                $copyright = getSiteSetting(
+                    'footer_copyright',
+                    '© {YEAR} koshi supplier. All rights reserved.'
+                );
+                echo e(str_replace('{YEAR}', date('Y'), $copyright));
+                ?>
+            </span>
+        </div>
+    </div>
+</footer>
+<div class="modal fade quick-view-modal" id="quickViewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content p-3">
+            <div class="modal-body" id="quickViewBody"></div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="<?php echo ASSET_URL; ?>js/app.js"></script>
+</body>
+</html>
