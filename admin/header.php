@@ -168,6 +168,12 @@ if(!isset($_SESSION['user'])) {
 			          </a>
 			        </li>
 
+			        <li class="treeview <?php if( ($cur_page == 'blog.php') || ($cur_page == 'blog-add.php') || ($cur_page == 'blog-edit.php') ) {echo 'active';} ?>">
+			          <a href="blog.php">
+			            <i class="fa fa-newspaper-o"></i> <span>Blog Management</span>
+			          </a>
+			        </li>
+
 			        <li class="treeview <?php if( ($cur_page == 'social-media.php') ) {echo 'active';} ?>">
 			          <a href="social-media.php">
 			            <i class="fa fa-globe"></i> <span>Social Media</span>
