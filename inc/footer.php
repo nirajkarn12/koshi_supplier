@@ -8,7 +8,7 @@
             <div class="col-lg-3">
                 <div class="footer-brand mb-3">
                     <img src="<?php echo getProductImage('logo.jpg'); ?>" alt="Brand logo">
-                    <span>Sastika Trading</span>
+                    <span>Koshi Supplier</span>
                 </div>
                 <p class="text-white-50 mb-0"><?php echo t('crafted_with_care'); ?></p>
             </div>
@@ -52,7 +52,7 @@
                 <?php
                 $copyright = getSiteSetting(
                     'footer_copyright',
-                    '© {YEAR} Sastika Trading. All rights reserved.'
+                    '© {YEAR} Koshi Supplier. All rights reserved.'
                 );
                 echo e(str_replace('{YEAR}', date('Y'), $copyright));
                 ?>
@@ -70,6 +70,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+<script>
+$(function() {
+    $('[data-fancybox="product-gallery"]').fancybox({
+        buttons: [
+            "slideShow",
+            "fullScreen",
+            "thumbs",
+            "zoom",
+            "close"
+        ],
+        loop: true,
+        protect: true
+    });
+});
+</script>
 <script src="<?php echo ASSET_URL; ?>js/app.js"></script>
 </body>
 </html>

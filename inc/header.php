@@ -7,8 +7,79 @@ require_once __DIR__ . '/breadcrumbs.php';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo e($pageTitle ?? SITE_NAME); ?> | <?php echo e(SITE_NAME); ?></title>
-    <meta name="description" content="Modern candle, resin and craft supplies storefront built from the existing database.">
+    <?php
+    $siteName = e(getSiteSetting('site_name', SITE_NAME));
+    $defaultDescription = e(getSiteSetting('meta_description', 'Modern candle, resin and craft supplies storefront built from the existing database.'));
+    $defaultKeywords = e(getSiteSetting('meta_keywords', 'candles, resin, craft supplies, handmade products, online store'));
+    $defaultAuthor = e(getSiteSetting('site_author', $siteName));
+    $pageTitleTag = e($pageTitle ?? $siteName);
+    $pageDescription = e($metaDescription ?? $defaultDescription);
+    $pageKeywords = e($metaKeywords ?? $defaultKeywords);
+    $pageAuthor = e($metaAuthor ?? $defaultAuthor);
+    $canonicalUrl = e($canonicalUrl ?? ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
+    $robotsContent = e($robots ?? 'index,follow');
+    $ogType = e($ogType ?? 'website');
+    $ogImageValue = $ogImage ?? getSiteSetting('og_image', 'assets/images/og-default.png');
+    $ogImageUrl = e(getProductImage($ogImageValue));
+    $ogImageAlt = e($ogImageAlt ?? $pageTitleTag);
+    $twitterCard = e($twitterCard ?? 'summary_large_image');
+    $twitterSite = e($twitterSite ?? getSiteSetting('twitter_handle', '@' . preg_replace('/[^a-z0-9_]/i', '', strtolower($siteName))));
+    $twitterCreator = e($twitterCreator ?? $twitterSite);
+    $googleVerification = e(getSiteSetting('google_site_verification', ''));
+    $bingVerification = e(getSiteSetting('bing_site_verification', ''));
+    $publishedTime = e($publishedTime ?? '');
+    $modifiedTime = e($modifiedTime ?? '');
+    $jsonLdData = $jsonLd ?? [
+        '@context' => 'https://schema.org',
+        '@type' => 'WebSite',
+        'url' => rtrim(BASE_URL, '/'),
+        'name' => $siteName,
+        'description' => $defaultDescription,
+        'potentialAction' => [
+            '@type' => 'SearchAction',
+            'target' => rtrim(BASE_URL, '/') . '/search.php?query={search_term_string}',
+            'query-input' => 'required name=search_term_string'
+        ],
+    ];
+    ?>
+    <title><?php echo $pageTitleTag; ?> | <?php echo $siteName; ?></title>
+    <meta name="description" content="<?php echo $pageDescription; ?>">
+    <meta name="keywords" content="<?php echo $pageKeywords; ?>">
+    <meta name="author" content="<?php echo $pageAuthor; ?>">
+    <meta name="robots" content="<?php echo $robotsContent; ?>">
+    <meta name="googlebot" content="<?php echo $robotsContent; ?>">
+    <meta name="bingbot" content="<?php echo $robotsContent; ?>">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <?php if (!empty($googleVerification)): ?>
+    <meta name="google-site-verification" content="<?php echo $googleVerification; ?>">
+    <?php endif; ?>
+    <?php if (!empty($bingVerification)): ?>
+    <meta name="msvalidate.01" content="<?php echo $bingVerification; ?>">
+    <?php endif; ?>
+    <link rel="canonical" href="<?php echo $canonicalUrl; ?>">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="<?php echo $siteName; ?>">
+    <meta property="og:type" content="<?php echo $ogType; ?>">
+    <meta property="og:title" content="<?php echo $pageTitleTag; ?>">
+    <meta property="og:description" content="<?php echo $pageDescription; ?>">
+    <meta property="og:url" content="<?php echo $canonicalUrl; ?>">
+    <meta property="og:image" content="<?php echo $ogImageUrl; ?>">
+    <meta property="og:image:alt" content="<?php echo $ogImageAlt; ?>">
+    <?php if (!empty($publishedTime)): ?>
+    <meta property="article:published_time" content="<?php echo $publishedTime; ?>">
+    <?php endif; ?>
+    <?php if (!empty($modifiedTime)): ?>
+    <meta property="article:modified_time" content="<?php echo $modifiedTime; ?>">
+    <?php endif; ?>
+    <meta name="twitter:card" content="<?php echo $twitterCard; ?>">
+    <meta name="twitter:title" content="<?php echo $pageTitleTag; ?>">
+    <meta name="twitter:description" content="<?php echo $pageDescription; ?>">
+    <meta name="twitter:image" content="<?php echo $ogImageUrl; ?>">
+    <meta name="twitter:site" content="<?php echo $twitterSite; ?>">
+    <meta name="twitter:creator" content="<?php echo $twitterCreator; ?>">
+    <script type="application/ld+json"><?php echo json_encode($jsonLdData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?></script>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#111827">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,6 +88,7 @@ require_once __DIR__ . '/breadcrumbs.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
     <link rel="stylesheet" href="<?php echo ASSET_URL; ?>css/style.css">
     <style>
     /* Dropdown menu stays open when interacting inside */
@@ -82,7 +154,7 @@ require_once __DIR__ . '/breadcrumbs.php';
     <nav class="navbar navbar-expand-lg container py-3">
         <a class="navbar-brand" href="<?php echo BASE_URL; ?>">
             <img src="<?php echo getProductImage('logo.jpg'); ?>" alt="Brand logo">
-            <span>Sastika Trading</span>
+            <span>Koshi Supplier</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

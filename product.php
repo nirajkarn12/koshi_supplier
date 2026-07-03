@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/inc/functions.php';
+
 $productId = (int)($_GET['id'] ?? 0);
 if (!$productId) {
     header('Location: products.php');
@@ -15,13 +16,20 @@ if (!$product) {
 }
 
 $pdo->prepare('UPDATE tbl_product SET p_total_view = p_total_view + 1 WHERE p_id = ?')->execute([$productId]);
+
 $gallery = getProductGallery($productId);
 $category = getCategoryName($product['ecat_id']);
-$related = $pdo->prepare('SELECT p_id, p_name, p_featured_photo, p_short_description, p_qty, ecat_id FROM tbl_product WHERE p_is_active = 1 AND ecat_id = ? AND p_id != ? ORDER BY p_id DESC LIMIT 4');
+
+$related = $pdo->prepare('SELECT p_id, p_name, p_featured_photo, p_short_description, p_qty, ecat_id 
+                          FROM tbl_product 
+                          WHERE p_is_active = 1 AND ecat_id = ? AND p_id != ? 
+                          ORDER BY p_id DESC LIMIT 4');
 $related->execute([$product['ecat_id'], $productId]);
 $relatedProducts = $related->fetchAll();
+
 $pageTitle = $product['p_name'];
 include __DIR__ . '/inc/header.php';
+
 $breadcrumbs = [
     ['label' => 'Home', 'url' => BASE_URL],
     ['label' => 'Shop', 'url' => BASE_URL . 'products.php'],
@@ -29,17 +37,34 @@ $breadcrumbs = [
 ];
 echo renderBreadcrumbs($breadcrumbs);
 ?>
+
 <div class="row g-5">
   <div class="col-lg-6">
     <div class="card card-hover p-3">
-      <img src="<?php echo getProductImage($product['p_featured_photo']); ?>" alt="<?php echo e($product['p_name']); ?>" class="img-fluid rounded-4 mb-3" style="height:450px; object-fit:cover; width:100%;">
+      <!-- Featured Image -->
+      <a href="<?php echo e(getProductImage($product['p_featured_photo'])); ?>" data-fancybox="product-gallery" data-caption="<?php echo e($product['p_name']); ?>">
+        <img src="<?php echo getProductImage($product['p_featured_photo']); ?>" 
+             alt="<?php echo e($product['p_name']); ?>" 
+             class="img-fluid rounded-4 mb-3" 
+             style="height:450px; object-fit:cover; width:100%;">
+      </a>
+
+      <!-- Gallery Images -->
       <div class="row g-3">
         <?php foreach ($gallery as $photo) { ?>
-          <div class="col-3"><img src="<?php echo $photo['photo']; ?>" alt="" class="img-fluid rounded-3 gallery-thumb"></div>
+          <div class="col-3">
+            <a href="<?php echo e($photo['photo']); ?>" data-fancybox="product-gallery" data-caption="<?php echo e($product['p_name']); ?>">
+              <img src="<?php echo e($photo['photo']); ?>" 
+                   alt="<?php echo e($product['p_name']); ?>" 
+                   class="img-fluid rounded-3 gallery-thumb"
+                   style="height:120px; object-fit:cover; width:100%; cursor:pointer;">
+            </a>
+          </div>
         <?php } ?>
       </div>
     </div>
   </div>
+
   <div class="col-lg-6">
     <div class="card card-hover p-4">
       <div class="d-flex justify-content-between align-items-center mb-3">
@@ -64,6 +89,7 @@ echo renderBreadcrumbs($breadcrumbs);
     </div>
   </div>
 </div>
+
 <div class="row g-4 mt-3">
   <div class="col-12">
     <div class="card card-hover p-4">
@@ -74,13 +100,13 @@ echo renderBreadcrumbs($breadcrumbs);
     </div>
   </div>
 </div>
+
 <?php if ($relatedProducts) { ?>
 <div class="mt-5">
     <div class="section-title">Related Products</div>
     <div class="row g-4">
         <?php
         $currentProduct = $product;
-
         foreach ($relatedProducts as $product) {
             include __DIR__ . '/pages/product-card.php';
         }
@@ -89,4 +115,5 @@ echo renderBreadcrumbs($breadcrumbs);
     </div>
 </div>
 <?php } ?>
+
 <?php include __DIR__ . '/inc/footer.php'; ?>

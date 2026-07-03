@@ -26,6 +26,7 @@ $latest = $pdo->query('SELECT p.p_id, p.p_name, p.p_short_description, p.p_qty, 
 $popular = $pdo->query('SELECT p.p_id, p.p_name, p.p_short_description, p.p_qty, p.ecat_id, p.p_featured_photo FROM tbl_product p WHERE p.p_is_active = 1 ORDER BY p.p_total_view DESC, p.p_id DESC LIMIT 8')->fetchAll();
 $topCategories = getTopCategories();
 $posts = $pdo->query('SELECT post_id, post_title, post_content, photo FROM tbl_post ORDER BY post_id DESC LIMIT 2')->fetchAll();
+$faqs = $pdo->query('SELECT faq_id, faq_title, faq_content FROM tbl_faq ORDER BY faq_id ASC LIMIT 5')->fetchAll();
 $settings = $pdo->query('SELECT * FROM tbl_settings LIMIT 1')->fetch();
 $heroSlides = $pdo->query('SELECT * FROM tbl_slider ORDER BY id ASC')->fetchAll();
 $newsletterEnabled = (int)getSiteSetting('newsletter_on_off', 1);
@@ -193,6 +194,37 @@ $newsletterText = getSiteSetting('newsletter_text', t('newsletter_default_text')
   </div>
 </section>
 <?php } ?>
+
+<section class="mb-5">
+  <div class="container">
+    <div class="section-title"><?php echo t('faqs'); ?></div>
+    <div class="accordion" id="faqAccordion">
+      <?php if ($faqs) { foreach ($faqs as $index => $faq) { ?>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faqHeading<?php echo $faq['faq_id']; ?>">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse<?php echo $faq['faq_id']; ?>" aria-expanded="false" aria-controls="faqCollapse<?php echo $faq['faq_id']; ?>">
+              <span class="faq-question-icon"><i class="fa fa-question-circle"></i></span>
+              <?php echo e($faq['faq_title']); ?>
+            </button>
+          </h2>
+          <div id="faqCollapse<?php echo $faq['faq_id']; ?>" class="accordion-collapse collapse" aria-labelledby="faqHeading<?php echo $faq['faq_id']; ?>" data-bs-parent="#faqAccordion">
+            <div class="accordion-body faq-answer">
+              <div class="faq-answer-heading">
+                <span class="faq-answer-icon"><i class="fa fa-comment-dots"></i></span>
+                <span class="faq-answer-label"><?php echo t('answer'); ?></span>
+              </div>
+              <div class="faq-answer-text">
+                <?php echo $faq['faq_content']; ?>
+              </div>
+            </div>
+          </div>
+        </div>
+      <?php } } else { ?>
+        <div class="alert alert-light rounded-4"><?php echo t('no_faqs_yet'); ?></div>
+      <?php } ?>
+    </div>
+  </div>
+</section>
 <?php if (!empty($settings['banner_login'])): ?>
 <!-- Welcome Popup -->
 <div class="modal fade" id="welcomePopup" tabindex="-1" aria-hidden="true">

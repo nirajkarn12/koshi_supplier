@@ -56,10 +56,17 @@ function renderFlash() {
 
 function getSiteSetting($field, $default = '') {
     global $pdo;
-    $stmt = $pdo->prepare('SELECT ' . preg_replace('/[^a-zA-Z0-9_]/', '', $field) . ' FROM tbl_settings LIMIT 1');
-    $stmt->execute();
-    $value = $stmt->fetchColumn();
-    return $value !== false ? $value : $default;
+    static $settings = null;
+
+    if ($settings === null) {
+        $settings = $pdo->query('SELECT * FROM tbl_settings LIMIT 1')->fetch(PDO::FETCH_ASSOC);
+        if (!$settings) {
+            $settings = [];
+        }
+    }
+
+    $fieldName = preg_replace('/[^a-zA-Z0-9_]/', '', $field);
+    return array_key_exists($fieldName, $settings) && $settings[$fieldName] !== null ? $settings[$fieldName] : $default;
 }
 
 function getProductImage($filename) {
@@ -79,6 +86,7 @@ function getProductImage($filename) {
     }
 
     $possiblePaths[] = __DIR__ . '/../assets/uploads/' . $cleanName;
+    $possiblePaths[] = __DIR__ . '/../assets/uploads/product_photos/' . $cleanName;
     $possiblePaths[] = __DIR__ . '/../' . $cleanName;
 
     foreach ($possiblePaths as $path) {
