@@ -18,7 +18,7 @@ require_once __DIR__ . '/breadcrumbs.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" href="<?php echo ASSET_URL; ?>css/style.css">
-        <style>
+    <style>
     /* Dropdown menu stays open when interacting inside */
     .mega-menu {
         min-width: 260px;
@@ -58,29 +58,6 @@ require_once __DIR__ . '/breadcrumbs.php';
         background: #e9ecef;
     }
 </style>
-    <style>
-    /* Category accordion inside mega menu */
-    .mega-menu .btn-link {
-        font-weight: 600;
-        border-bottom: 1px solid #e9ecef;
-        padding: 0.5rem 0;
-    }
-    .mega-menu .btn-link .collapse-icon {
-        transition: transform 0.2s ease;
-    }
-    .mega-menu .btn-link[aria-expanded="true"] .collapse-icon {
-        transform: rotate(180deg);
-    }
-    .mega-menu .dropdown-item {
-        padding: 0.25rem 0.75rem;
-        font-size: 0.9rem;
-    }
-    /* Optional: make the dropdown scrollable if it becomes too tall */
-    .mega-menu {
-        max-height: 70vh;
-        overflow-y: auto;
-    }
-</style>
 </head>
 <body>
 <div class="page-loader" id="pageLoader">
@@ -105,9 +82,9 @@ require_once __DIR__ . '/breadcrumbs.php';
     <nav class="navbar navbar-expand-lg container py-3">
         <a class="navbar-brand" href="<?php echo BASE_URL; ?>">
             <img src="<?php echo getProductImage('logo.jpg'); ?>" alt="Brand logo">
-            <span>koshi supplier</span>
+            <span>Sastika Trading</span>
         </a>
-   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
@@ -142,9 +119,9 @@ require_once __DIR__ . '/breadcrumbs.php';
                 <li class="nav-item"><a class="nav-link" href="<?php echo BASE_URL; ?>blog.php"><?php echo t('blog'); ?></a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo BASE_URL; ?>contact.php"><?php echo t('contact'); ?></a></li>
             </ul>
-            <form class="d-flex me-3 position-relative search-shell" role="search" action="<?php echo BASE_URL; ?>search.php" method="get">
+            <form class="d-flex me-3 mb-2 position-relative search-shell" role="search" action="<?php echo BASE_URL; ?>search.php" method="get">
                 <div class="input-group input-group-sm">
-                    <input class="form-control" id="headerSearchInput" type="search" name="q" placeholder="<?php echo t('search_products'); ?>" aria-label="Search" autocomplete="off">
+                <input class="form-control" id="headerSearchInput" type="search" name="q" placeholder="<?php echo t('search_products'); ?>" aria-label="Search" autocomplete="off" style="max-width: 300px;">
                     <button class="btn btn-dark" type="submit"><i class="fa fa-search"></i></button>
                 </div>
                 <div id="searchResults" class="position-absolute top-100 start-0 w-100 bg-white rounded-4 shadow mt-2 p-2" style="z-index:1000; display:none;"></div>

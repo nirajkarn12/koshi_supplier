@@ -5,14 +5,14 @@
 <footer class="site-footer">
     <div class="container py-5">
         <div class="row g-4 align-items-start">
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="footer-brand mb-3">
                     <img src="<?php echo getProductImage('logo.jpg'); ?>" alt="Brand logo">
-                    <span>koshi supplier</span>
+                    <span>Sastika Trading</span>
                 </div>
                 <p class="text-white-50 mb-0"><?php echo t('crafted_with_care'); ?></p>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <h5 class="fw-bold mb-3"><?php echo t('quick_links'); ?></h5>
                 <ul class="list-unstyled footer-links">
                     <li><a href="<?php echo BASE_URL; ?>products.php"><?php echo t('shop'); ?></a></li>
@@ -21,13 +21,30 @@
                     <li><a href="<?php echo BASE_URL; ?>contact.php"><?php echo t('contact'); ?></a></li>
                 </ul>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <h5 class="fw-bold mb-3"><?php echo t('contact'); ?></h5>
                 <p class="text-white-50 mb-2"><i class="fa fa-location-dot me-2"></i><?php echo e(getSiteSetting('contact_address', 'Kathmandu, Nepal')); ?></p>
                 <p class="text-white-50 mb-2"><i class="fa fa-phone me-2"></i><?php echo e(getSiteSetting('contact_phone', '+977 9869224134')); ?></p>
                 <p class="text-white-50 mb-0"><i class="fa fa-envelope me-2"></i><?php echo e(getSiteSetting('contact_email', 'contact@resinnepal.com.np')); ?></p>
             </div>
+            <div class="col-lg-3">
+    <h5 class="fw-bold mb-3">Follow Us</h5>
+
+    <div class="d-flex flex-wrap gap-2 social-links">
+        <?php foreach (getSocialLinks() as $social) { ?>
+            <a href="<?php echo e($social['url']); ?>"
+               target="_blank"
+               rel="noreferrer"
+               class="social-link"
+               aria-label="<?php echo e($social['name']); ?>">
+                <i class="<?php echo e($social['icon']); ?>"></i>
+            </a>
+        <?php } ?>
+    </div>
+</div>
+</div>
         </div>
+
     </div>
     <div class="footer-bottom">
         <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center small gap-2">
@@ -35,7 +52,7 @@
                 <?php
                 $copyright = getSiteSetting(
                     'footer_copyright',
-                    '© {YEAR} koshi supplier. All rights reserved.'
+                    '© {YEAR} Sastika Trading. All rights reserved.'
                 );
                 echo e(str_replace('{YEAR}', date('Y'), $copyright));
                 ?>

@@ -30,11 +30,10 @@
 						<tbody>
 							<?php
 							$i=0;
-							$statement = $pdo->prepare("SELECT * 
-														FROM tbl_customer t1
-														JOIN tbl_country t2
-														ON t1.cust_country = t2.country_id
-													");
+							$statement = $pdo->prepare("
+							SELECT * 
+							FROM tbl_customer
+						");
 							$statement->execute();
 							$result = $statement->fetchAll(PDO::FETCH_ASSOC);						
 							foreach ($result as $row) {
@@ -46,7 +45,6 @@
 									<td><?php echo $row['cust_email']; ?></td>
 									<td><?php echo htmlspecialchars($row['cust_phone'] ?? ''); ?></td>
 									<td>
-										<?php echo $row['country_name']; ?>
 										<?php echo $row['cust_city']; ?>
 										<?php echo $row['cust_state']; ?>
 									</td>

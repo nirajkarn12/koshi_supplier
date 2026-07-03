@@ -18,7 +18,7 @@ if(isset($_POST['form1'])) {
     }
     if(empty($_POST['message_text'])) {
         $valid = 0;
-        $error_message .= 'Subject can not be empty\n';
+        $error_message .= 'Message can not be empty\n'; // corrected typo
     }
     if($valid == 1) {
 
@@ -151,7 +151,6 @@ if($success_message != '') {
 	</div>
 </section>
 
-
 <section class="content">
     <div class="row">
         <div class="col-md-12">
@@ -161,10 +160,15 @@ if($success_message != '') {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Customer</th>
-                                <th>Items</th>
-                                <th>Totals</th>
-                                <th>Payment</th>
+                                <th>Order ID</th>
+                                <th>Invoice ID</th>
+                                <th>Customer Name</th>
+                                <th>Customer Phone</th>
+                                <th>Products</th>
+                                <th>Grand Total</th>
+                                <th>Paid</th>
+                                <th>Due</th>
+                                <th>Method</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -179,13 +183,37 @@ if($success_message != '') {
                             ?>
                             <tr class="<?php echo ($row['payment_status'] == 'Pending') ? 'bg-r' : 'bg-g'; ?>">
                                 <td><?php echo $i; ?></td>
+                                <td><?php echo htmlspecialchars($row['payment_id']); ?></td>
+                                <td><?php echo htmlspecialchars($row['id']); ?></td>
+                                <td><?php echo htmlspecialchars($row['customer_name']); ?></td>
+                                <td><?php echo htmlspecialchars($row['customer_phone'] ?? ''); ?></td>
                                 <td>
-                                    <b>Invoice:</b> <?php echo htmlspecialchars($row['payment_id']); ?><br>
-                                    <b>Name:</b> <?php echo htmlspecialchars($row['customer_name']); ?><br>
-                                    <b>Email:</b> <?php echo htmlspecialchars($row['customer_email']); ?><br>
-                                    <b>Phone:</b> <?php echo htmlspecialchars($row['customer_phone'] ?? ''); ?><br>
-                                    <b>Date:</b> <?php echo htmlspecialchars($row['payment_date']); ?><br><br>
-                                    <a href="#" data-toggle="modal" data-target="#model-<?php echo $i; ?>" class="btn btn-warning btn-xs" style="width:50%;margin-bottom:4px;">Send Message</a>
+                                    <?php
+                                    $statement1 = $pdo->prepare("SELECT * FROM tbl_order WHERE payment_id=?");
+                                    $statement1->execute(array($row['payment_id']));
+                                    $result1 = $statement1->fetchAll(PDO::FETCH_ASSOC);
+                                    foreach ($result1 as $row1) {
+                                        echo '<b>' . htmlspecialchars($row1['product_name']) . '</b> (Qty: ' . htmlspecialchars($row1['quantity']) . ')<br>';
+                                    }
+                                    ?>
+                                </td>
+                                <td><?php echo number_format((float)($row['grand_total'] ?? 0), 2); ?></td>
+                                <td><?php echo number_format((float)($row['paid_amount'] ?? 0), 2); ?></td>
+                                <td><?php echo number_format((float)($row['due_amount'] ?? 0), 2); ?></td>
+                                <td><?php echo htmlspecialchars($row['payment_method']); ?></td>
+                                <td style="white-space: nowrap;">
+                                    <!-- Details Button -->
+                                    <a href="order-show.php?id=<?php echo $row['id']; ?>" class="btn btn-success btn-xs" style="margin-bottom:2px;">Details</a>
+                                    <!-- Invoice Button -->
+                                    <a href="invoice.php?id=<?php echo $row['id']; ?>" class="btn btn-info btn-xs" style="margin-bottom:2px;">Invoice</a>
+                                    <!-- Edit Button -->
+                                    <a href="order-edit.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-xs" style="margin-bottom:2px;">Edit</a>
+                                    <!-- Send Message Button (triggers modal) -->
+                                    <a href="#" data-toggle="modal" data-target="#model-<?php echo $i; ?>" class="btn btn-warning btn-xs" style="margin-bottom:2px;">Message</a>
+                                    <!-- Delete Button -->
+                                    <a href="#" class="btn btn-danger btn-xs" data-href="order-delete.php?id=<?php echo $row['id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+
+                                    <!-- Modal for Send Message (unique per row) -->
                                     <div id="model-<?php echo $i; ?>" class="modal fade" role="dialog">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -208,7 +236,7 @@ if($success_message != '') {
                                                             </tr>
                                                             <tr>
                                                                 <td></td>
-                                                                <td><input type="submit" value="Send Message" name="form1"></td>
+                                                                <td><input type="submit" value="Send Message" name="form1" class="btn btn-primary"></td>
                                                             </tr>
                                                         </table>
                                                     </form>
@@ -219,40 +247,8 @@ if($success_message != '') {
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- End Modal -->
                                 </td>
-                                <td>
-                                    <?php
-                                    $statement1 = $pdo->prepare("SELECT * FROM tbl_order WHERE payment_id=?");
-                                    $statement1->execute(array($row['payment_id']));
-                                    $result1 = $statement1->fetchAll(PDO::FETCH_ASSOC);
-                                    foreach ($result1 as $row1) {
-                                        echo '<b>' . htmlspecialchars($row1['product_name']) . '</b><br>';
-                                        echo 'Size: ' . htmlspecialchars($row1['size']) . ' | Color: ' . htmlspecialchars($row1['color']) . '<br>';
-                                        echo 'Qty: ' . htmlspecialchars($row1['quantity']) . ' | Price: ' . htmlspecialchars($row1['unit_price']) . '<br><br>';
-                                    }
-                                    ?>
-                                </td>
-                                <td>
-                                    <b>Subtotal:</b> <?php echo number_format((float)($row['subtotal'] ?? 0), 2); ?><br>
-                                    <b>Discount:</b> <?php echo number_format((float)($row['discount_amount'] ?? 0), 2); ?><br>
-                                    <b>VAT:</b> <?php echo number_format((float)($row['vat_amount'] ?? 0), 2); ?><br>
-                                    <b>Grand Total:</b> <?php echo number_format((float)($row['grand_total'] ?? 0), 2); ?><br>
-                                    <b>Due:</b> <?php echo number_format((float)($row['due_amount'] ?? 0), 2); ?>
-                                </td>
-                                <td>
-                                    <b>Method:</b> <?php echo htmlspecialchars($row['payment_method']); ?><br>
-                                    <b>Paid:</b> <?php echo number_format((float)($row['paid_amount'] ?? 0), 2); ?><br>
-                                    <b>Status:</b> <?php echo htmlspecialchars($row['payment_status']); ?><br>
-                                    <b>Shipping:</b> <?php echo htmlspecialchars($row['shipping_status']); ?><br>
-                                </td>
-<td style="white-space: nowrap;">
-    <a href="invoice.php?id=<?php echo $row['id']; ?>" class="btn btn-info" style="margin-right:5px;">Invoice</a>
-    <a href="order-edit.php?id=<?php echo $row['id']; ?>" class="btn btn-primary" style="margin-right:5px;">Edit</a>
-    <a href="#" class="btn btn-danger"
-       data-href="order-delete.php?id=<?php echo $row['id']; ?>"
-       data-toggle="modal"
-       data-target="#confirm-delete">Delete</a>
-</td>
                             </tr>
                             <?php
                             }
@@ -264,7 +260,7 @@ if($success_message != '') {
         </div>
     </div>
 
-
+<!-- Delete Confirmation Modal -->
 <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -282,6 +278,5 @@ if($success_message != '') {
         </div>
     </div>
 </div>
-
 
 <?php require_once('footer.php'); ?>

@@ -22,6 +22,17 @@ define("BASE_URL", "");
 
 // Getting Admin url
 define("ADMIN_URL", BASE_URL . "admin" . "/");
+// SMTP Settings
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_USER', 'nirajkarna66@gmail.com');
+define('SMTP_PASS', 'eptg ikjc lbbd yosq');
+define('SMTP_PORT', 465);
+
+define('SMTP_FROM_EMAIL', 'nirajkarna66@gmail.com');
+define('SMTP_FROM_NAME', 'Koshi Supplier');
+
+define('SMTP_REPLYTO_EMAIL', 'nirajkarna66@gmail.com');
+define('SMTP_REPLYTO_NAME', 'Koshi Supplier');
 
 try {
 	$pdo = new PDO("mysql:host={$dbhost};dbname={$dbname}", $dbuser, $dbpass);

@@ -76,10 +76,17 @@ echo renderBreadcrumbs($breadcrumbs);
 </div>
 <?php if ($relatedProducts) { ?>
 <div class="mt-5">
-  <div class="section-title">Related Products</div>
-  <div class="row g-4">
-    <?php foreach ($relatedProducts as $relatedProduct) { include __DIR__ . '/pages/product-card.php'; } ?>
-  </div>
+    <div class="section-title">Related Products</div>
+    <div class="row g-4">
+        <?php
+        $currentProduct = $product;
+
+        foreach ($relatedProducts as $product) {
+            include __DIR__ . '/pages/product-card.php';
+        }
+        $product = $currentProduct;
+        ?>
+    </div>
 </div>
 <?php } ?>
 <?php include __DIR__ . '/inc/footer.php'; ?>
