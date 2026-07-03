@@ -6,19 +6,19 @@ ini_set('error_reporting', E_ALL);
 date_default_timezone_set('Asia/kathmandu');
 
 // Host Name
-$dbhost = 'localhost';
+$dbhost = getenv('DB_HOST') ?: 'localhost';
 
 // Database Name
-$dbname   = 'resinnep_ecommerceweb';
+$dbname   = getenv('DB_NAME') ?: 'resinnep_koshi_supplier';
 
 // Database Username
-$dbuser = 'root';
+$dbuser = getenv('DB_USER') ?: 'root';
 
 // Database Password
-$dbpass = '';
+$dbpass = getenv('DB_PASS') ?: 'koshi_123456';
 
 // Defining base url
-define("BASE_URL", "http://localhost/koshi_supplier/");
+define("BASE_URL", getenv('BASE_URL') ?: 'https://www.koshisupplier.com.np/');
 
 // Getting Admin url
 define("ADMIN_URL", BASE_URL . "admin" . "/");

@@ -5,27 +5,13 @@ if (session_status() === PHP_SESSION_NONE) {
 
 date_default_timezone_set('Asia/Kathmandu');
 
-$dbhost = 'localhost';
-$dbname = 'resinnep_ecommerceweb';
-$dbuser = 'root';
-$dbpass = '';
+$dbhost = getenv('DB_HOST') ?: 'localhost';
+$dbname = getenv('DB_NAME') ?: 'resinnep_koshi_supplier';
+$dbuser = getenv('DB_USER') ?: 'root';
+$dbpass = getenv('DB_PASS') ?: 'koshi_123456';
 
-$documentRoot = rtrim(str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'] ?? '') ?? ''), '/');
-$projectRoot = rtrim(str_replace('\\', '/', realpath(__DIR__ . '/..') ?? ''), '/');
-
-if ($documentRoot !== '' && $projectRoot !== '' && strpos($projectRoot, $documentRoot) === 0) {
-    $relativePath = substr($projectRoot, strlen($documentRoot));
-    $basePath = '/' . ltrim($relativePath, '/') . '/';
-} else {
-    $scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
-    $basePath = ($scriptDir === '' || $scriptDir === '.') ? '/' : $scriptDir . '/';
-}
-
-if ($basePath === '//') {
-    $basePath = '/';
-}
-
-define('BASE_URL', $basePath);
+$baseUrl = getenv('BASE_URL') ?: 'https://www.koshisupplier.com.np/';
+define('BASE_URL', rtrim($baseUrl, '/') . '/');
 define('ASSET_URL', BASE_URL . 'assets/');
 define('UPLOAD_URL', ASSET_URL . 'uploads/');
 
