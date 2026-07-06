@@ -129,6 +129,115 @@ require_once __DIR__ . '/breadcrumbs.php';
     .subcategory-wrap .dropdown-item:hover {
         background: #e9ecef;
     }
+    /* Header search & language layout improvements */
+    :root {
+        --header-control-height: 44px;
+        --flag-size-desktop: 20px;
+        --flag-size-mobile: 18px;
+    }
+    .header-controls {
+        gap: 0.75rem;
+        flex: 0 0 auto;
+        justify-content: flex-end;
+    }
+    .header-search-language {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 0 0 auto;
+        min-width: 0;
+        max-width: 320px;
+    }
+    .search-form {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1 1 auto;
+        min-width: 0;
+        width: auto;
+    }
+    .search-form .form-control {
+        height: var(--header-control-height);
+        border-radius: 6px 0 0 6px;
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 240px;
+    }
+    .header-controls > .d-flex {
+        flex: 0 0 auto;
+    }
+    .search-form .btn {
+        height: var(--header-control-height);
+        border-radius: 0 6px 6px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 0.75rem;
+    }
+    .input-group .form-control { min-width: 0; }
+    .language-switcher {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        height: var(--header-control-height);
+    }
+    .language-dropdown-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.35rem 0.5rem;
+        height: var(--header-control-height);
+        border-radius: 6px;
+    }
+    .language-switcher .dropdown-menu {
+        min-width: 180px;
+        padding: 0.35rem 0;
+    }
+    .language-switcher .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+    }
+    .language-switcher .dropdown-item.active,
+    .language-switcher .dropdown-item:hover {
+        background: #f8f9fa;
+    }
+    .lang-flag {
+        width: var(--flag-size-desktop);
+        height: auto;
+        display: block;
+    }
+    @media (max-width: 767px) {
+        :root { --header-control-height: 44px; }
+        .lang-flag { width: var(--flag-size-mobile); }
+        .header-controls { flex-wrap: wrap; gap: 0.5rem; }
+        .header-search-language { flex-basis: 100%; }
+        .language-switcher { flex-basis: 100%; justify-content: flex-start; }
+        .search-form .form-control { border-radius: 6px; }
+        .search-form .btn { border-radius: 6px; }
+        .language-dropdown-toggle { width: auto; }
+    }
+    /* Mobile small screens: keep search+submit on one row, then flags row, then icons+login row */
+    @media (max-width: 575px) {
+        .header-controls { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+        /* Search row: input + button stay inline */
+        .header-search-language { order: 1; width: 100%; }
+        .search-form { flex-direction: row; width: 100%; gap: 0.5rem; flex-wrap: nowrap; align-items: center; }
+        .search-form .form-control { flex: 1 1 auto; min-width: 0; box-sizing: border-box; }
+        .search-form .btn { flex: 0 0 48px; width: 48px; height: var(--header-control-height); padding: 0; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; }
+        .search-form .form-control, .search-form .btn { white-space: nowrap; }
+
+        /* Second row: language flags centered */
+        .language-switcher { order: 2; display: flex; justify-content: center; gap: 0.35rem; width: 100%; padding: 0.25rem 0; }
+        .language-switcher .language-dropdown-toggle { padding: 0.35rem 0.75rem; }
+        .lang-flag { width: var(--flag-size-mobile); }
+
+        /* Third row: icons (compare, wishlist, cart) and login button arranged in one row */
+        .header-controls > .d-flex { order: 3; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; width: 100%; }
+        .header-controls > .d-flex .icon-pill { display: inline-flex; margin: 0 0.25rem; }
+        .header-controls > .d-flex .btn.btn-dark.btn-sm { flex: 0 0 auto; }
+    }
 </style>
 </head>
 <body>
@@ -153,8 +262,8 @@ require_once __DIR__ . '/breadcrumbs.php';
 <header class="site-header">
     <nav class="navbar navbar-expand-lg container py-3">
         <a class="navbar-brand" href="<?php echo BASE_URL; ?>">
-            <img src="<?php echo getProductImage('logo.jpg'); ?>" alt="Brand logo">
-            <span>Koshi Supplier</span>
+            <img src="<?php echo getProductImage(getSiteSetting('logo', 'logo.jpg')); ?>" alt="Brand logo">
+            <span>Sastika Trading</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -191,18 +300,38 @@ require_once __DIR__ . '/breadcrumbs.php';
                 <li class="nav-item"><a class="nav-link" href="<?php echo BASE_URL; ?>blog.php"><?php echo t('blog'); ?></a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo BASE_URL; ?>contact.php"><?php echo t('contact'); ?></a></li>
             </ul>
-            <form class="d-flex me-3 mb-2 position-relative search-shell" role="search" action="<?php echo BASE_URL; ?>search.php" method="get">
-                <div class="input-group input-group-sm">
-                <input class="form-control" id="headerSearchInput" type="search" name="q" placeholder="<?php echo t('search_products'); ?>" aria-label="Search" autocomplete="off" style="max-width: 300px;">
-                    <button class="btn btn-dark" type="submit"><i class="fa fa-search"></i></button>
+            <div class="header-controls d-flex align-items-center gap-2 flex-nowrap ms-auto">
+            <form class="header-search-language mb-2 position-relative search-shell" role="search" action="<?php echo BASE_URL; ?>search.php" method="get">
+                <div class="search-form input-group">
+                    <input class="form-control header-search-input" id="headerSearchInput" type="search" name="q" placeholder="<?php echo t('search_products'); ?>" aria-label="Search" autocomplete="off">
+                    <button class="btn btn-dark header-search-btn" type="submit"><i class="fa fa-search"></i></button>
                 </div>
                 <div id="searchResults" class="position-absolute top-100 start-0 w-100 bg-white rounded-4 shadow mt-2 p-2" style="z-index:1000; display:none;"></div>
             </form>
-            <div class="d-flex align-items-center gap-2 flex-wrap">
-                <div class="btn-group btn-group-sm language-switcher" role="group" aria-label="Language switcher">
-                    <a href="<?php echo BASE_URL; ?>?lang=en" class="btn btn-outline-secondary btn-sm <?php echo getCurrentLang() === 'en' ? 'active' : ''; ?>" aria-label="English" title="English"><img src="<?php echo ASSET_URL; ?>images/flags/gb.svg" alt="English" class="lang-flag"></a>
-                    <a href="<?php echo BASE_URL; ?>?lang=ne" class="btn btn-outline-secondary btn-sm <?php echo getCurrentLang() === 'ne' ? 'active' : ''; ?>" aria-label="नेपाली" title="नेपाली"><img src="<?php echo ASSET_URL; ?>images/flags/np.svg" alt="नेपाली" class="lang-flag"></a>
-                    <a href="<?php echo BASE_URL; ?>?lang=hi" class="btn btn-outline-secondary btn-sm <?php echo getCurrentLang() === 'hi' ? 'active' : ''; ?>" aria-label="हिन्दी" title="हिन्दी"><img src="<?php echo ASSET_URL; ?>images/flags/in.svg" alt="हिन्दी" class="lang-flag"></a>
+            <div class="d-flex align-items-center gap-2">
+                <?php
+                $currentLang = getCurrentLang();
+                $langFlags = [
+                    'en' => ['src' => ASSET_URL . 'images/flags/gb.svg', 'label' => 'English'],
+                    'ne' => ['src' => ASSET_URL . 'images/flags/np.svg', 'label' => 'नेपाली'],
+                    'hi' => ['src' => ASSET_URL . 'images/flags/in.svg', 'label' => 'हिन्दी'],
+                ];
+                $currentLangFlag = $langFlags[$currentLang] ?? $langFlags['en'];
+                ?>
+                <div class="dropdown language-switcher">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle language-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="<?php echo $currentLangFlag['src']; ?>" alt="<?php echo e($currentLangFlag['label']); ?>" class="lang-flag">
+                    </button>
+                    <ul class="dropdown-menu">
+                        <?php foreach ($langFlags as $code => $data) { ?>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2<?php echo $currentLang === $code ? ' active' : ''; ?>" href="<?php echo BASE_URL; ?>?lang=<?php echo $code; ?>">
+                                    <img src="<?php echo $data['src']; ?>" alt="<?php echo e($data['label']); ?>" class="lang-flag">
+                                    <span><?php echo e($data['label']); ?></span>
+                                </a>
+                            </li>
+                        <?php } ?>
+                    </ul>
                 </div>
                 <a href="<?php echo BASE_URL; ?>compare.php" class="icon-pill position-relative">
                     <i class="fa fa-balance-scale"></i>
@@ -221,6 +350,7 @@ require_once __DIR__ . '/breadcrumbs.php';
                 <?php } else { ?>
                     <a href="<?php echo BASE_URL; ?>account/login.php" class="btn btn-dark btn-sm"><?php echo t('login'); ?></a>
                 <?php } ?>
+            </div>
             </div>
         </div>
     </nav>

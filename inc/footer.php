@@ -7,7 +7,7 @@
         <div class="row g-4 align-items-start">
             <div class="col-lg-3">
                 <div class="footer-brand mb-3">
-                    <img src="<?php echo getProductImage('logo.jpg'); ?>" alt="Brand logo">
+                    <img src="<?php echo getProductImage(getSiteSetting('logo', 'logo.jpg')); ?>" alt="Brand logo">
                     <span>Koshi Supplier</span>
                 </div>
                 <p class="text-white-50 mb-0"><?php echo t('crafted_with_care'); ?></p>
